@@ -1,18 +1,15 @@
 from django.shortcuts import render, render_to_response
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
-from django.contrib import messages
-from datetime import datetime
-
-import json
-
-from models import *
-from forms import *
 
 
 # Create your views here.
+from forms import UserForm, UserCreateForm
+from models import DTUser, Inventory
+
+
 def is_requester(user):
     if DTUser.objects.filter(user=user, user_type='R'):
         return True
@@ -81,12 +78,6 @@ def Register(request):
 
     return render(request, 'gadgetapp/register.html',
                   {'user_form': user_form, 'c_form': c_form, 'registered': registered}, RequestContext(request))
-
-
-@login_required
-def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect('/login')
 
 
 def DefaultView(request):

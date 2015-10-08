@@ -3,17 +3,13 @@
 
 /***************************************************/
 
-
 /***************************************************/
 
-
-/* in the below, all selector has a default color red 
+/* in the below, all selector has a default color red
 when you want to customize the color, you just change the 
 velue of its and link that file on the html page */
 
-
 /***************************************************/
-
 
 #header .header-top-bar .header-login a:hover,
 #header .header-top-bar .header-social > li > a:hover,
@@ -21,7 +17,7 @@ velue of its and link that file on the html page */
 #header .header-nav-bar .navbar-nav li a:hover,
 #header .header-nav-bar .navbar-nav li.active a,
 #header .small-menu ul li a:hover,
-#footer .main-footer .footer-links a ,
+#footer .main-footer .footer-links a,
 #footer .main-footer span,
 #footer .main-footer h5 span,
 #footer .main-footer .footer-links li a,
@@ -71,10 +67,9 @@ velue of its and link that file on the html page */
 .checkbox-input.active label:before,
 .act {
 
-  color: #e00000;
+    color: #e00000;
 
 }
-
 
 /***************************************************/
 
@@ -82,21 +77,18 @@ velue of its and link that file on the html page */
 
 /***************************************************/
 
-
 .nav-tabs {
-  border-bottom: 3px solid #e00000;
+    border-bottom: 3px solid #e00000;
 }
 
 .nav-tabs > li a:hover {
-  border-bottom-color: #e00000;
+    border-bottom-color: #e00000;
 }
 
 .nav-tabs > li a {
-  border: 1px solid #ccc;
-  border-bottom-color: #e00000;
+    border: 1px solid #ccc;
+    border-bottom-color: #e00000;
 }
-
-
 
 /***************************************************/
 
@@ -105,20 +97,17 @@ velue of its and link that file on the html page */
 /***************************************************/
 
 .nav-tabs > li.active a:hover {
-  border: 1px solid #e00000;
+    border: 1px solid #e00000;
 }
 
 .navbar-default .navbar-toggle {
-  border-color: #e00000;
+    border-color: #e00000;
 }
-
-
 
 .nav-tabs > li:hover a, .nav-tabs > li a.active:hover {
-  background-color: transparent;
-  border-bottom-color: #e00000;
+    background-color: transparent;
+    border-bottom-color: #e00000;
 }
-
 
 /***************************************************/
 
@@ -127,24 +116,21 @@ velue of its and link that file on the html page */
 /***************************************************/
 
 .nav-tabs > li.active > a {
-  background: #e00000;
-  border: 1px solid #e00000;
+    background: #e00000;
+    border: 1px solid #e00000;
 }
 
 .nav-tabs > li.active > a,
- .nav-tabs > li.active > a:hover,
-  .nav-tabs > li.active > a:focus {
-  background: #e00000;
-  color: #fff;
-  border-color: #e00000;
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    background: #e00000;
+    color: #fff;
+    border-color: #e00000;
 }
-
 
 #header .small-menu .choose-option ul li.active:after {
-  border-left: 13px solid #e00000;
+    border-left: 13px solid #e00000;
 }
-
-
 
 /***************************************************/
 
@@ -153,13 +139,12 @@ that are set default to red */
 
 /***************************************************/
 
-
 #header .small-menu .choose-option ul li.active,
 .call-to-action-section .icon,
 #main-wrapper .view-style .list-grid-view button.active,
-#main-wrapper .view-style .page-list ul li.active, 
+#main-wrapper .view-style .page-list ul li.active,
 #main-wrapper .view-style .page-list ul li.active a,
-#main-wrapper .pagination ul li.active, 
+#main-wrapper .pagination ul li.active,
 #main-wrapper .pagination ul li.active a,
 #main-wrapper .all-menu-details .price-option button.active,
 #main-wrapper .all-menu-details .menu-with-details .details h6:hover a,
@@ -173,10 +158,9 @@ that are set default to red */
 .page-content .reservation .reservation-form button:hover,
 .ui-datepicker-calendar td a:hover,
 .radio-input.active label:before {
-  
-  background: #e00000;
-}
 
+    background: #e00000;
+}
 
 /***************************************************/
 
@@ -184,25 +168,23 @@ that are set default to red */
 
 /***************************************************/
 
-
 .master-slider .ms-layer a:hover {
-  color: #e00000;
-  background: #fff;
+    color: #e00000;
+    background: #fff;
 }
 
 #main-wrapper .box-link figure figcaption a {
-	border: 3px solid #e00000;
+    border: 3px solid #e00000;
 }
 
 #main-wrapper .box-link figure figcaption a:hover {
-  background-color: #e00000; 
-  border: 3px solid #fff;
-  -webkit-box-shadow: 0 0 0 4px #e00000;
-  -moz-box-shadow: 0 0 0 4px #e00000;
-  -o-box-shadow: 0 0 0 4px #e00000;
-  box-shadow: 0 0 0 4px #e00000;
+    background-color: #e00000;
+    border: 3px solid #fff;
+    -webkit-box-shadow: 0 0 0 4px #e00000;
+    -moz-box-shadow: 0 0 0 4px #e00000;
+    -o-box-shadow: 0 0 0 4px #e00000;
+    box-shadow: 0 0 0 4px #e00000;
 }
-
 
 /***************************************************/
 
@@ -217,7 +199,7 @@ that are set default to red */
 .page-content .leave-reply form button,
 .page-content .contact-us .send-message form button,
 .page-content .reservation .reservation-form button {
-	border: 1px solid #e00000;
+    border: 1px solid #e00000;
 }
 
 /***************************************************/

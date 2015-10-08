@@ -1,7 +1,7 @@
 {% extends 'gadgetapp/base.html' %}
 {% block content %}
 
-    <br /><br />
+    <br/><br/>
     <div class="container">
 
         <div class="row">
@@ -15,15 +15,17 @@
                         <form id="login_form" method="post" action="/login">
                             {% csrf_token %}
                             <label>Username: </label>
-                            <input type="text" name="username" placeholder="Login ID"  class="form-control" value="" size="50" />
-                            <br />
+                            <input type="text" name="username" placeholder="Login ID" class="form-control" value=""
+                                   size="50"/>
+                            <br/>
                             <label>Password: </label>
-                            <input type="password" name="password" placeholder="password"  class="form-control" value="" size="50" />
-                            <br />
+                            <input type="password" name="password" placeholder="password" class="form-control" value=""
+                                   size="50"/>
+                            <br/>
                             <a href="/register" type="register" class="btn btn-info">Register here</a>
                             <button type="submit" class="btn btn-success pull-right" value="submit">Login</button>
                         </form>
-                                
+
                     </div>
                 </div>
             </div>

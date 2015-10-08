@@ -1,55 +1,58 @@
 <div id="page-content" ng-controller="ConfirmCtrl">
 
-	<div class="container">
-		<div class="heading">
-			<legend class="text-center"><h2>Confirm your Order</h2></legend>
-		</div>
+    <div class="container">
+        <div class="heading">
+            <legend class="text-center"><h2>Confirm your Order</h2></legend>
+        </div>
 
-		{% verbatim %}
+        {% verbatim %}
 
-		<div class="table-responsive">
-		    <table class="table">
-		    	<tr>
-		    		<th>Item</th>
-		    		<th>Price</th>
-		    		<th>Quantity</th>
-		    		<th>Sub-Total</th>
-		    	</tr>
-		    	<tr ng-repeat="item in my_items">
-		    		<td ng-bind="item.name"></td>
-		    		<td ng-bind="item.price | currency"></td>
-		    		<td ng-bind="item.quantity"></td>
-		    		<td ng-bind="item.price * item.quantity | currency">$</td>
-		    	</tr>
-		    	<tr>
-		    		<th>Total</th>
-		    		<th></th>
-		    		<th></th>
-		    		<th ng-bind="sum() | currency"></th>
-		    	</tr>
-		    </table>
-		</div>
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Sub-Total</th>
+                </tr>
+                <tr ng-repeat="item in my_items">
+                    <td ng-bind="item.name"></td>
+                    <td ng-bind="item.price | currency"></td>
+                    <td ng-bind="item.quantity"></td>
+                    <td ng-bind="item.price * item.quantity | currency">$</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <th></th>
+                    <th></th>
+                    <th ng-bind="sum() | currency"></th>
+                </tr>
+            </table>
+        </div>
 
-		<div class="panel">
-			<div class="panel-body">
-				<form class="form-horizontal">
-				    <div class="form-group">
-					    <label for="notes" class="col-md-2 control-label">Notes</label>
-					    <div class="col-md-10">
-					        <input type="textbox" class="form-control" ng-model="notes" id="notes" placeholder="Notes for the Approver">
-					    </div>
-				    </div>
-				</form>
-			</div>
-		</div>
+        <div class="panel">
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="notes" class="col-md-2 control-label">Notes</label>
 
-		<div align="center">
-			<button class="btn btn-default-red" ng-click='checkout()'><i class="fa fa-shopping-cart"></i>Checkout</button>
-		</div>
-		<br/>
-		
-		{% endverbatim %}
+                        <div class="col-md-10">
+                            <input type="textbox" class="form-control" ng-model="notes" id="notes"
+                                   placeholder="Notes for the Approver">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-	</div>
-	
+        <div align="center">
+            <button class="btn btn-default-red" ng-click='checkout()'><i class="fa fa-shopping-cart"></i>Checkout
+            </button>
+        </div>
+        <br/>
+
+        {% endverbatim %}
+
+    </div>
+
 </div>

@@ -1,39 +1,39 @@
 {% extends 'gadgetapp/base.html' %}
 {% block content %}
 
-    <br /><br />
-    <div class="container"> 
+    <br/><br/>
+    <div class="container">
         <h1>Register User</h1>
 
         {% if registered %}
-        <strong>Thank you for registering!</strong>
-        <a href="/">Return to the homepage.</a><br />
+            <strong>Thank you for registering!</strong>
+            <a href="/">Return to the homepage.</a><br/>
         {% else %}
-        <br />
+            <br/>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form id="c_form" method="post" action="/register/" enctype="multipart/form-data">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form id="c_form" method="post" action="/register/" enctype="multipart/form-data">
 
-                    {% csrf_token %}
+                        {% csrf_token %}
 
-                    <!-- Display each form. The as_p method wraps each element in a paragraph
-                         (<p>) element. This ensures each element appears on a new line,
-                         making everything look neater. -->
-                    {% load crispy_forms_tags %}
-                    <div class="col-lg-6">
-                        <h4>Your Details</h4>
-                        {{ user_form|crispy }}
-                    </div>
-                    <div class="col-lg-6">
-                        <h4>More Details</h4>
-                        {{ c_form|crispy }}
-                    </div>
-                    <!-- Provide a button to click to submit the form. -->
-                    <input type="submit" name="submit" value="Register" class="btn btn-success"/>
-                </form>
+                        <!-- Display each form. The as_p method wraps each element in a paragraph
+                             (<p>) element. This ensures each element appears on a new line,
+                             making everything look neater. -->
+                        {% load crispy_forms_tags %}
+                        <div class="col-lg-6">
+                            <h4>Your Details</h4>
+                            {{ user_form|crispy }}
+                        </div>
+                        <div class="col-lg-6">
+                            <h4>More Details</h4>
+                            {{ c_form|crispy }}
+                        </div>
+                        <!-- Provide a button to click to submit the form. -->
+                        <input type="submit" name="submit" value="Register" class="btn btn-success"/>
+                    </form>
+                </div>
             </div>
-        </div>
         {% endif %}
 
     </div>
