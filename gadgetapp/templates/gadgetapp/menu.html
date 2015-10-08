@@ -1,0 +1,155 @@
+<div id="page-content" ng-controller="MenuCtrl">
+
+	<!-- start #main-wrapper -->
+	<div class="container">
+		<div class="heading">
+			<legend class="text-center"><h2>Menu for {{ restaurant.restaurant.restaurant_name }}</h2></legend>
+		</div>
+
+		{% verbatim %}
+
+		<div class="row mt30">
+			<div class="col-md-9">
+				<ul class="nav nav-tabs" role="tablist">
+
+					<li class="active">
+						<a href="#all" role="tab" data-toggle="tab">All</a>
+					</li>
+
+					<li ng-repeat="item in menu_items | filter:{ level : 0 }">
+						<a href="#{{ item.id }}" role="tab" data-toggle="tab">{{ item.name }}</a>
+					</li>
+					
+				</ul>
+				
+				<div class="tab-content">
+
+					<div class="tab-pane fade in active" id="all">
+						<div class="all-menu-details" ng-repeat="item in menu_items | filter:{ level : 0 }" >
+							<h5>{{ item.name }}</h5>
+							<div class="item-list right-checkout" ng-repeat="item2 in menu_items | filter:{ level : 1 }" ng-if="item2.parent == item.id">
+								<div class="list-image">
+									<img src="img/content/menu-list-img.jpg" alt="">
+								</div>
+
+								<div class="all-details">
+									<div class="visible-option">
+										<div class="details">
+											<h6><a href="dish.html">{{ item2.name }}</a>
+											</h6>
+											<p class="for-list">{{ item2.description }}</p>
+										</div>
+
+										<div class="price-option fl">
+											<h4>{{ item2.price | currency }}</h4>
+										</div>
+										
+										<div class="qty-cart text-center clearfix">
+											<h6>Qty</h6>
+											<form class="">
+												<input type="text" placeholder="1">
+												<br>
+												<button ng-click="myCheckPush(item2)"><i class="fa fa-shopping-cart"></i>
+												</button>
+											</form>
+										</div> 
+									</div> 
+								</div>
+							</div>
+						</div>
+					</div> 
+
+					<div class="tab-pane fade" ng-repeat="item in menu_items | filter:{ level : 0 }" id="{{ item.id }}">
+						<div class="all-menu-details">
+							<h5>{{ item.name }}</h5>
+							<div class="item-list right-checkout" ng-repeat="item2 in menu_items | filter:{ level : 1 }" ng-if="item2.parent == item.id">
+								<div class="list-image">
+									<img src="{{item2.picture}}" alt="">
+								</div>
+
+								<div class="all-details">
+									<div class="visible-option">
+										<div class="details">
+											<h6><a href="dish.html">{{ item2.name }}</a>
+											</h6>
+											<p class="for-list">{{ item2.description }}</p>
+										</div>
+
+										<div class="price-option fl">
+											<h4>{{ item2.price | currency }}</h4>
+										</div>
+										
+										<div class="qty-cart text-center clearfix">
+											<h6>Qty</h6>
+											<form class="">
+												<input type="text" placeholder="1">
+												<br>
+												<button ng-click="myCheckPush(item2)"><i class="fa fa-shopping-cart"></i>
+												</button>
+											</form>
+										</div> 
+									</div> 
+								</div>
+							</div>
+						</div>
+					</div> 
+					
+				</div> 
+
+			</div>
+			<!--end main-grid layout-->
+			{% endverbatim %}
+			<!--end .col-md-3 -->
+			{% ifequal usertype 'user' %}
+
+			{% verbatim %}
+
+			<div class="col-md-3">
+				<div class="my-check-right">
+					<h5 class="toggle-title">My Order</h5>
+					<ul class="list-unstyled">
+
+						<li ng-repeat="item in my_items">
+							<h6>{{ item.name }}</h6><br/>
+							<p><b>Price:</b>{{ item.price | currency }} each</p><br/>
+							<p><b>Quantity:</b> {{ item.quantity }}</p><br/>
+							<p>
+								<span>
+									<i class="fa fa-pencil"></i>
+								</span>
+								<button ng-click="myCheckRemove(item)" class="pull-right">
+								    <span>
+										<i class="fa fa-times"></i>
+									</span>
+								</button>
+							</p>
+						</li>
+						
+					</ul>
+
+					<h5 class="toggle-title">Total: {{ total | currency }}</h5>
+
+					<div class="checkout" ng-hide="my_items.length <= 0">
+						<a class="btn btn-default-red" ui-sref="confirm"><i class="fa fa-shopping-cart"></i>Checkout</a>
+						<button class="btn btn-default-red" ng-click="reset()">Reset Order</buttion>
+					</div>
+				</div>
+				<!-- end .chekout class -->
+			</div>
+
+			{% endverbatim %}
+
+			{% else %}
+
+			<div class="col-md-2">
+				<h4>Not logged in as a DTUser</h4>
+			</div>
+
+			{% endifequal %}
+		</div>
+		<!-- end .row -->
+
+	</div>
+	<!--end .container -->
+	
+</div> 

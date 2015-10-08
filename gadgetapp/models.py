@@ -4,14 +4,35 @@ from mptt.models import MPTTModel, TreeForeignKey
 import datetime
 
 # Create your models here.
+class CommonInfo(models.Model):
+    address1 = models.CharField(max_length=50)
+    address2 = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    zipcode = models.CharField(max_length=10)
+    phone = models.CharField(max_length=10)
 
-class DTUser(models.Model):
+    class Meta:
+        verbose_name = "Common Information"
+        verbose_name_plural = "Common Information"
+        abstract = True
+
+class DTUser(CommonInfo):
     USER_CHOICES = (
         ('R', 'Requester'),
         ('A', 'Approver'),
     )
+    LOCATION_CHOICES = (
+    	('L', 'Lake Success, New York'),
+    	('S', 'Sacramento, California'),
+    	('D', 'Dallas, Texas'),
+    	('A', 'Alpharetta, Georgia'),
+    	('SJ', 'South Jordan, Utah'),
+    	('F', 'Field'),
+    )
     user = models.OneToOneField(User)
     user_type = models.CharField(choices=USER_CHOICES, default='R', max_length=50)
+    location = models.CharField(choices=LOCATION_CHOICES, max_length=50)
 
     class Meta:
         verbose_name = "DT User"
@@ -25,6 +46,7 @@ class Inventory(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     description = models.CharField(blank=True, max_length=500)
     price = models.FloatField(default = 0)
+    picture = models.ImageField(upload_to = 'gadgetapp/static/gadgetapp/images/inventory_images/')
 
     class Meta:
         verbose_name = "Inventory"
