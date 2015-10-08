@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from mptt.models import MPTTModel, TreeForeignKey
-import datetime
+
 
 # Create your models here.
 class CommonInfo(models.Model):
@@ -17,18 +17,19 @@ class CommonInfo(models.Model):
         verbose_name_plural = "Common Information"
         abstract = True
 
+
 class DTUser(CommonInfo):
     USER_CHOICES = (
         ('R', 'Requester'),
         ('A', 'Approver'),
     )
     LOCATION_CHOICES = (
-    	('L', 'Lake Success, New York'),
-    	('S', 'Sacramento, California'),
-    	('D', 'Dallas, Texas'),
-    	('A', 'Alpharetta, Georgia'),
-    	('SJ', 'South Jordan, Utah'),
-    	('F', 'Field'),
+        ('L', 'Lake Success, New York'),
+        ('S', 'Sacramento, California'),
+        ('D', 'Dallas, Texas'),
+        ('A', 'Alpharetta, Georgia'),
+        ('SJ', 'South Jordan, Utah'),
+        ('F', 'Field'),
     )
     user = models.OneToOneField(User)
     user_type = models.CharField(choices=USER_CHOICES, default='R', max_length=50)
@@ -41,12 +42,13 @@ class DTUser(CommonInfo):
     def __unicode__(self):
         return self.user.username
 
+
 class Inventory(MPTTModel):
     name = models.CharField(max_length=50)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     description = models.CharField(blank=True, max_length=500)
-    price = models.FloatField(default = 0)
-    picture = models.ImageField(upload_to = 'gadgetapp/static/gadgetapp/images/inventory_images/')
+    price = models.FloatField(default=0)
+    picture = models.ImageField(upload_to='gadgetapp/static/gadgetapp/images/inventory_images/')
 
     class Meta:
         verbose_name = "Inventory"
@@ -54,6 +56,7 @@ class Inventory(MPTTModel):
 
     def __unicode__(self):
         return self.name
+
 
 class Order(models.Model):
     STATUS_CHOICES = (
@@ -74,10 +77,11 @@ class Order(models.Model):
     def __unicode__(self):
         return self.id
 
+
 class OrderDetail(models.Model):
     order = models.ForeignKey(Order)
     inventory = models.ForeignKey(Inventory)
-    quantity = models.IntegerField(default = 1)
+    quantity = models.IntegerField(default=1)
 
     class Meta:
         verbose_name = "Order Detail"
