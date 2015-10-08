@@ -68,7 +68,9 @@ class Order(models.Model):
     user = models.ForeignKey(User, related_name='requester')
     approver = models.ForeignKey(User, related_name='approver', blank=True)
     order_date = models.DateTimeField(auto_now_add=True)
+    update_timestamp = models.DateTimeField(auto_now_add=False)
     status = models.CharField(choices=STATUS_CHOICES, default='R', max_length=50)
+    total_price = models.FloatField(blank = True)
 
     class Meta:
         verbose_name = "Order"
