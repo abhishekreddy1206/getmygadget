@@ -4,6 +4,7 @@ from models import *
 
 # Register your models here.
 
+
 class InventoryAdmin(DjangoMpttAdmin):
     pass
 
