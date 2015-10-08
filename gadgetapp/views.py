@@ -106,3 +106,37 @@ def Checkout(request):
 
 def ConfirmOrder(request):
 	return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
+
+def PostOrder(request):
+
+	if request.method == 'POST':
+		data = request.body
+		order_data = json.loads(data)
+		total = sum(c['price']*c['quantity'] for c in order_data)
+
+		cust = DTUser.objects.get(user = request.user)
+		order_save = Order(customer = cust, restaurant = rest, order_type = 'PI', total_price = total, update_timestamp = datetime.now(), updated_by = request.user)
+		order_save.save()
+		
+		for i in range(0,len(order_data)):
+			x = order_data[i]
+			menu = Menu.objects.get(name = x['name'], parent = x['parent'], level=x['level'])
+			order_detail_save = OrderDetail(order = order_save, menu = menu, quantity = x['quantity'])
+			order_detail_save.save()
+
+		subject = "CloudMellow: Thank you for you Order"
+
+		plaintext = get_template('bhojanamapp/emailreceived.txt')
+		htmly = get_template('bhojanamapp/emailreceived.html')
+		d = Context({ 'username': request.user.username, 'order_data': order_data, 'total': total })
+
+		text_content = plaintext.render(d)
+		html_content = htmly.render(d)
+
+		from_email = settings.EMAIL_HOST_USER
+		to_list = [request.user.email]
+		msg = EmailMultiAlternatives(subject, text_content, from_email, to_list)
+		msg.attach_alternative(html_content, "text/html")
+		msg.send()
+
+	return render_to_response("bhojanamapp/confirmorder.html", { 'user': request.user })

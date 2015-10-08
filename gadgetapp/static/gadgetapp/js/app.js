@@ -165,8 +165,6 @@ gadgetapp.controller('ConfirmCtrl', function ($scope, $state, $stateParams, $htt
 
     $scope.my_items = ItemService.getItems();
     $scope.notes = "";
-    $scope.order_type = "pickup";
-    $scope.minimum = ItemService.getMinimum2();
 
     $scope.sum = function(){
         total = 0
@@ -176,18 +174,11 @@ gadgetapp.controller('ConfirmCtrl', function ($scope, $state, $stateParams, $htt
         return total;
     };
 
-    $scope.checkmin = function(){
-        if($scope.minimum > $scope.sum())
-            return true;
-        return false;
-    }
-
     $scope.checkout = function(){
         var variablesToSend = angular.toJson($scope.my_items);
 
         var more_variables =    {
                                     "notes": $scope.notes,
-                                    "order_type": $scope.order_type, 
                                 }
         
         $http.post('/postorder/', variablesToSend).then(function(response){
