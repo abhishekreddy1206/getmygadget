@@ -129,7 +129,7 @@
 	                            <th>Order Date</th>
 	                            <th>Order Total</th>
 	                        </tr>
-	                        <tr ng-repeat="order in order_items" ng-if="order.order_status == 'D'">
+	                        <tr ng-repeat="order in order_items" ng-if="order.status == 'D'">
 	                            <td ng-bind="order.id"></td>
 	                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
 	                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
@@ -150,7 +150,7 @@
 	                            <th>Order Total</th>
 	                            <th>Reason</th>
 	                        </tr>
-	                        <tr ng-repeat="order in order_items" ng-if="order.order_status == 'RE'">
+	                        <tr ng-repeat="order in order_items" ng-if="order.status == 'RE'">
 	                            <td ng-bind="order.id"></td>
 	                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
 	                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
