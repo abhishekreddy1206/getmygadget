@@ -155,7 +155,7 @@
                             </div>
                             <div class=" panel panel-body" align="center" ui-on-drop="onDrop($event,$data,delivered)" data-spy="scroll" data-target="#panelcategory" data-offset="0" style="max-height:500px;overflow:auto;position:relative;height: 500px;">
 
-                                <div class="completedorder" ui-draggable="true" drag="x" on-drop-success="dropSuccessHandler($event,$index,delivered)" ng-repeat="x in delivered" ng-click="open(x.id)">
+                                <div class="completedorder" ui-draggable="true" drag="x" on-drop-success="dropSuccessHandler($event,$index,delivered)" ng-repeat="x in dispatched" ng-click="open(x.id)">
                                     Order: {{x.id}}
                                 </div>
 
@@ -244,7 +244,7 @@
                             <th></th>
                             <th></th>
                         </tr>
-                        <tr ng-repeat="order in delivered | filter: paginatedelivered">
+                        <tr ng-repeat="order in dispatched | filter: paginatedispatched">
                             <td ng-bind="order.id"></td>
                             <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
                             <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
@@ -254,7 +254,7 @@
                         </tr>
                     </table>
                     <div class="text-center">
-                        <pagination total-items="totalDelivered" ng-model="currentPageDelivered" max-size="5" boundary-links="true" num-page="numPerPage" class="pagination-sm"></pagination>
+                        <pagination total-items="totalDiapatched" ng-model="currentPageDispatched" max-size="5" boundary-links="true" num-page="numPerPage" class="pagination-sm"></pagination>
                     </div>
                 </div>
             </div>

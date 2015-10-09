@@ -48,7 +48,7 @@ class Inventory(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     description = models.CharField(blank=True, max_length=500)
     price = models.FloatField(default=0)
-    picture = models.ImageField(upload_to='gadgetapp/static/gadgetapp/images/inventory_images/')
+    picture = models.ImageField(upload_to='gadgetapp/static/gadgetapp/images/inventory_images/', null=True, blank=True)
 
     class Meta:
         verbose_name = "Inventory"
