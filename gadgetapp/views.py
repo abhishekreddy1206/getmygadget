@@ -127,21 +127,6 @@ def PostOrder(request):
             order_detail_save = OrderDetail(order=order_save, inventory=inv, quantity=x['quantity'])
             order_detail_save.save()
 
-            # subject = "CloudMellow: Thank you for you Order"
-
-            # plaintext = get_template('bhojanamapp/emailreceived.txt')
-            # htmly = get_template('bhojanamapp/emailreceived.html')
-            # d = Context({ 'username': request.user.username, 'order_data': order_data, 'total': total })
-
-            # text_content = plaintext.render(d)
-            # html_content = htmly.render(d)
-
-            # from_email = settings.EMAIL_HOST_USER
-            # to_list = [request.user.email]
-            # msg = EmailMultiAlternatives(subject, text_content, from_email, to_list)
-            # msg.attach_alternative(html_content, "text/html")
-            # msg.send()
-
     return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})
 
 
@@ -157,9 +142,42 @@ def PostNotes(request):
 
     return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
 
+def PostComments(request):
+
+    if request.method == 'POST':
+        data = request.body
+        order_data = json.loads(data)
+        comments = order_data['comments']
+        order_id = order_data['order_id']
+
+        order_save = Order.objects.get(id = order_id)
+        order_save.approver_notes = comments
+        order_save.save()
+
+    return HttpResponseRedirect('/dashboard')
+
 @login_required
 def Dashboard(request):
     if is_requester(request.user):
         return render_to_response("gadgetapp/requesterdashboard.html", { 'user': request.user })
     else:
         return render_to_response("gadgetapp/approverdashboard.html", { 'user': request.user })
+
+def ChangeOrderStatus(request, pk, status):
+
+    order = Order.objects.get(id=pk)
+    order.status = status
+    order.update_timestamp = datetime.now()
+    order.updated_by = request.user
+    order.save()
+
+    if status == 'A':
+        status = 'Accepted'
+    if status == 'RE':
+        status = 'Rejected'
+    if status == 'R':
+        status = 'Received'
+    if status == 'D':
+        status = 'Dispatched'
+
+    return HttpResponseRedirect('/dashboard')

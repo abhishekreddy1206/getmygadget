@@ -8,10 +8,10 @@ gadgetapp.factory('InventoryService', function ($http) {
     }
 })
 
-gadgetapp.factory('RestaurantService', function ($http) {
+gadgetapp.factory('ApproverService', function ($http) {
     return {
-        getRestaurantList: function (callback) {
-            $http.get('/restaurantapi/').success(callback);
+        getList: function (callback) {
+            $http.get('/approverapi/').success(callback);
         }
     }
 })
@@ -239,7 +239,7 @@ gadgetapp.controller('CheckoutCtrl', function ($scope, $state, $stateParams, $ht
     setInterval($scope.GetData, 10000);
 });
 
-gadgetapp.controller('ApproverCtrl', function ($scope, $modal, $state, $stateParams, $http, UserService) {
+gadgetapp.controller('ApproverCtrl', function ($scope, $modal, $state, $stateParams, $http, UserService, ApproverService) {
 
     $scope.currentPageReceived = 1;
     $scope.currentPagePending = 1;
@@ -249,7 +249,7 @@ gadgetapp.controller('ApproverCtrl', function ($scope, $modal, $state, $statePar
 
     $scope.getData = function () {
 
-        RestaurantService.getRestaurantList(function (data) {
+        ApproverService.getList(function (data) {
             if (data != null) {
                 $scope.order_items = data;
 
@@ -257,7 +257,7 @@ gadgetapp.controller('ApproverCtrl', function ($scope, $modal, $state, $statePar
                     return (item.status == 'R');
                 }));
                 $scope.pending = ($scope.order_items.filter(function (item) {
-                    return (item.status == 'P' || item.status == 'A');
+                    return (item.status == 'A');
                 }));
                 $scope.dispatched = ($scope.order_items.filter(function (item) {
                     return (item.status == 'D');
@@ -321,7 +321,7 @@ gadgetapp.controller('ApproverCtrl', function ($scope, $modal, $state, $statePar
         if (array == $scope.received)
             $scope.changeorderstatus($data.id, 'R');
         else if (array == $scope.pending)
-            $scope.changeorderstatus($data.id, 'P');
+            $scope.changeorderstatus($data.id, 'A');
         else if (array == $scope.dispatched)
             $scope.changeorderstatus($data.id, 'D');
         else if (array == $scope.rejected)
@@ -352,12 +352,7 @@ var OrderInstanceCtrl = function ($scope, $http, $log, $modalInstance, order_id,
         if (data != null) {
             $scope.order = data[0];
             $scope.order_items = $scope.order.orders;
-            $scope.customer = $scope.order.customer;
-
-            if ($scope.order.order_type == "PI")
-                $scope.order_type = "Pickup";
-            else
-                $scope.order_type = "Parcel";
+            $scope.customer = $scope.order.user;
         }
     });
 

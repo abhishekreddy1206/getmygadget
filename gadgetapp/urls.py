@@ -16,4 +16,8 @@ urlpatterns = patterns('',
                        url(r'^getlatestorderuser/', api.GetLatestOrderUser.as_view(), name='getlatestorderuser'),
                        url(r'^dashboard/$', views.Dashboard, name='dashboard'),
                        url(r'^userapi/', api.UserOrderList.as_view(), name='userlist'),
+                       url(r'^approverapi/', api.ApproverList.as_view(), name='approverlist'),
+                       url(r'^changeorderstatus/(?P<pk>\d+)/(?P<status>.*)', views.ChangeOrderStatus, name='changeorderstatus'),
+                       url(r'^getorderdetail/(?P<pk>\d+)', api.GetOrderDetail.as_view(), name='getorderdetail'),
+                       url(r'^postcomments/', views.PostComments, name='postcomments'),
                        )

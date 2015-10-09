@@ -147,7 +147,6 @@
         <div class="well">
             <h6 class="text-center">Order Notes</h6>
             <b>Notes:</b> {{ order.user_notes }}
-            <br/><b>Order Type:</b> {{ order_type }}
         </div>
 
         <div class="well">
@@ -162,16 +161,16 @@
                         <th>Sub-Total</th>
                     </tr>
                     <tr ng-repeat="item in order_items">
-                        <td ng-bind="item.menu.name"></td>
-                        <td ng-bind="item.menu.price | currency:'&#x20B9;'"></td>
+                        <td ng-bind="item.inventory.name"></td>
+                        <td ng-bind="item.inventory.price | currency "></td>
                         <td ng-bind="item.quantity"></td>
-                        <td ng-bind="item.menu.price * item.quantity | currency:'&#x20B9;'"></td>
+                        <td ng-bind="item.inventory.price * item.quantity | currency "></td>
                     </tr>
                     <tr>
                         <th>Total</th>
                         <th></th>
                         <th></th>
-                        <th ng-bind="order.total_price | currency:'&#x20B9;'"></th>
+                        <th ng-bind="order.total_price | currency "></th>
                 </table>
             </div>
         </div>
@@ -189,13 +188,13 @@
     </div>
 
     <div class="modal-footer text-center">
-        <button class="btn btn-info" ng-if="order.order_status == 'R'" ng-click="acceptorder()">Accept</button>
-        <button class="btn btn-success" ng-if="order.order_status == 'A'" ng-click="completeorder()">Complete</button>
-        <button class="btn btn-warning" ng-disabled="!reject_notes" ng-if="order.order_status != 'RE'"
+        <button class="btn btn-info" ng-if="order.status == 'R'" ng-click="acceptorder()">Accept</button>
+        <button class="btn btn-success" ng-if="order.status == 'A'" ng-click="completeorder()">Complete</button>
+        <button class="btn btn-warning" ng-disabled="!reject_notes" ng-if="order.status != 'RE'"
                 ng-click="rejectorder(reject_notes)">Reject
         </button>
         <button class="btn btn-danger" ng-click="close()">Close</button>
-        <a href="/orderpdf/{{ order_id }}" class="btn btn-primary" ng-if="order.order_status == 'D'">View Receipt</a>
+        <a href="/orderpdf/{{ order_id }}" class="btn btn-primary" ng-if="order.status == 'D'">View Receipt</a>
     </div>
     {% endverbatim %}
 </script>

@@ -1,0 +1,294 @@
+{% extends 'gadgetapp/index.html' %}
+{% block bodycontent %}
+
+
+<div class="heading">
+	<legend class="text-center"><h2>Welcome to your Dashboard {{ user.username|title }}</h2></legend>
+</div>
+
+<div class="container" ng-controller="ApproverCtrl">
+
+    {% verbatim %}
+
+	<div class="row">
+	          	
+	    <!-- tabs left -->
+	    <ul class="nav nav-pills nav-stacked col-md-2">
+		    <li class="active"><a href="#overall" data-toggle="tab">Overall Dashboard</a></li>
+		    <li><a href="#received" data-toggle="tab">Received Orders</a></li>
+		    <li><a href="#pending" data-toggle="tab">Pending Orders</a></li>
+		    <li><a href="#completed" data-toggle="tab">Completed Orders</a></li>
+		    <li><a href="#rejected" data-toggle="tab">Rejected Orders</a></li>
+		</ul>
+	    <!-- /tabs -->
+
+        <div class="tab-content">
+
+    	    <div class="tab-pane in active fade col-md-10" id="overall">
+                <div class="row">    
+        	        <div class="col-lg-3">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-edit fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{ received.length }}</div>
+                                        <h6>Received</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-clock-o fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{ pending.length }}</div>
+                                        <h6>Pending</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-thumbs-up fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{ delivered.length }}</div>
+                                        <h6>Completed</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-thumbs-down fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{ rejected.length }}</div>
+                                        <h6>Rejected</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Received
+                            </div>
+                            <div class=" panel panel-body" align="center" ui-on-drop="onDrop($event,$data,received)" data-spy="scroll" data-target="#panelcategory" data-offset="0" style="max-height:500px;overflow:auto;position:relative;height: 500px;">
+
+                                <div class="receivedorder" ui-draggable="true" drag="x" on-drop-success="dropSuccessHandler($event,$index,received)" ng-repeat="x in received" ng-click="open(x.id)">
+                                    Order: {{x.id}}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                Pending
+                            </div>
+                            <div class=" panel panel-body" align="center" ui-on-drop="onDrop($event,$data,pending)" data-spy="scroll" data-target="#panelcategory" data-offset="0" style="max-height:500px;overflow:auto;position:relative;height: 500px;">
+
+                                <div class="pendingorder" ui-draggable="true" drag="x" on-drop-success="dropSuccessHandler($event,$index,pending)" ng-repeat="x in pending" ng-click="open(x.id)">
+                                    Order: {{x.id}}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                Completed
+                            </div>
+                            <div class=" panel panel-body" align="center" ui-on-drop="onDrop($event,$data,delivered)" data-spy="scroll" data-target="#panelcategory" data-offset="0" style="max-height:500px;overflow:auto;position:relative;height: 500px;">
+
+                                <div class="completedorder" ui-draggable="true" drag="x" on-drop-success="dropSuccessHandler($event,$index,delivered)" ng-repeat="x in delivered" ng-click="open(x.id)">
+                                    Order: {{x.id}}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                Rejected
+                            </div>
+                            <div class=" panel panel-body" align="center" ui-on-drop="onDrop($event,$data,rejected)" data-spy="scroll" data-target="#panelcategory" data-offset="0" style="max-height:500px;overflow:auto;position:relative;height: 500px;">
+
+                                <div class="rejectedorder" ui-draggable="true" drag="x" on-drop-success="dropSuccessHandler($event,$index,rejected)" ng-repeat="x in rejected" ng-click="open(x.id)">
+                                    Order: {{x.id}}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    	 	</div>
+
+    	 	<div class="tab-pane fade col-md-10" id="received">
+                <h2>Received Orders</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Order Number</th>
+                            <th>DTUser Name</th>
+                            <th>Order Date</th>
+                            <th>Order Total</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="order in received | filter: paginatereceived">
+                            <td ng-bind="order.id"></td>
+                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
+                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
+                            <td ng-bind="order.total_price | currency:'&#x20B9;'"></td>
+                            <td><a ng-click="open(order.id)" class="btn btn-link">View Order</a></td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <pagination total-items="totalReceived" ng-model="currentPageReceived" max-size="5" boundary-links="true" num-page="numPerPage" class="pagination-sm"></pagination>
+                    </div>
+                </div>
+    	 	</div>
+
+            <div class="tab-pane fade col-md-10" id="pending">
+                <h2>Pending Orders</h2>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Order Number</th>
+                            <th>DTUser Name</th>
+                            <th>Order Date</th>
+                            <th>Order Total</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="order in pending | filter: paginatepending">
+                            <td ng-bind="order.id"></td>
+                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
+                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
+                            <td ng-bind="order.total_price | currency:'&#x20B9;'"></td>
+                            <td><a ng-click="open(order.id)" class="btn btn-link">View Order</a></td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <pagination total-items="totalPending" ng-model="currentPagePending" max-size="5" boundary-links="true" num-page="numPerPage" class="pagination-sm"></pagination>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade col-md-10" id="completed">
+                <h2>Completed Orders</h2>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Order Number</th>
+                            <th>DTUser Name</th>
+                            <th>Order Date</th>
+                            <th>Order Total</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="order in delivered | filter: paginatedelivered">
+                            <td ng-bind="order.id"></td>
+                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
+                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
+                            <td ng-bind="order.total_price | currency:'&#x20B9;'"></td>
+                            <td><a ng-click="open(order.id)" class="btn btn-link">View Order</a></td>
+                            <td><a href="/orderpdf/{{ order.id }}" class="btn btn-info">View Receipt</a></td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <pagination total-items="totalDelivered" ng-model="currentPageDelivered" max-size="5" boundary-links="true" num-page="numPerPage" class="pagination-sm"></pagination>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade col-md-10" id="rejected">
+                <h2>Rejected Orders</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Order Number</th>
+                            <th>DTUser Name</th>
+                            <th>Order Date</th>
+                            <th>Order Total</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="order in rejected | filter: paginaterejected">
+                            <td ng-bind="order.id"></td>
+                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
+                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
+                            <td ng-bind="order.total_price | currency:'&#x20B9;'"></td>
+                            <td><a ng-click="open(order.id)" class="btn btn-link">View Order</a></td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <pagination total-items="totalRejected" ng-model="currentPageRejected" max-size="5" boundary-links="true" num-page="numPerPage" class="pagination-sm"></pagination>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+	</div>
+
+    {% endverbatim %}
+
+</div>
+
+{% endblock %}
