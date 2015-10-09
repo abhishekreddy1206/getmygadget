@@ -19,7 +19,7 @@
 
 	            <div class="alert alert-danger text-center" role="alert">
 	            	<p>OOPS! Your order was rejected by the Restaurant</p>
-	            	<br/><p><b>Reason:</b> {{ order.restaurant_notes }}</p>
+	            	<br/><p><b>Reason:</b> {{ order.approver_notes }}</p>
 	            </div>
 	        </div>
 	        <div ng-if="progress_type != 'Rejected'">
@@ -29,21 +29,20 @@
 	                  		{{ progress_type }}
 	            </progressbar>
 
-	            <div ng-if="progress_type == 'Delivered'" class="alert alert-success text-center" role="alert">
+	            <div ng-if="progress_type == 'Dispatched'" class="alert alert-success text-center" role="alert">
 	            	<p>HURRAY! Your order is complete.</p>
 	            </div>
 	        </div>
 
 
 			<div class="well col-md-3">
-				<h6 class="text-center">Customer Information</h6>
+				<h6 class="text-center">DT User Information</h6>
 				<b>Name:</b> {{ customer.user.first_name }}, {{ customer.user.last_name }}
 				<br/><b>Email:</b> {{ customer.user.email }}
 				<br/><b>Address:</b> {{ customer.address1 }}, {{ customer.address2 }}, {{ customer.city }}, {{ customer.state }} - {{ customer.zipcode }}
 				<br/><b>Phone:</b> {{ customer.phone }}
 				<br/><b>Order Number:</b> {{ order.id }}
-				<br/><b>Notes:</b> {{ order.user_notes }}
-				<br/><b>Order Type:</b> {{ order_type }}
+				<br/><b>Notes:</b> {{ order.notes }}
 			</div>
 
 			<div class="well col-md-9">
@@ -57,16 +56,16 @@
 				    		<th>Sub-Total</th>
 				    	</tr>
 				    	<tr ng-repeat="item in order_items">
-				    		<td ng-bind="item.menu.name"></td>
-				    		<td ng-bind="item.menu.price | currency:'&#x20B9;'"></td>
+				    		<td ng-bind="item.inventory.name"></td>
+				    		<td ng-bind="item.inventory.price | currency "></td>
 				    		<td ng-bind="item.quantity"></td>
-				    		<td ng-bind="item.menu.price * item.quantity | currency:'&#x20B9;'"></td>
+				    		<td ng-bind="item.inventory.price * item.quantity | currency "></td>
 				    	</tr>
 				    	<tr>
 				    		<th>Total</th>
 				    		<th></th>
 				    		<th></th>
-				    		<th ng-bind="order.total_price | currency:'&#x20B9;'"></th>
+				    		<th ng-bind="order.total_price | currency "></th>
 				    </table>
 				</div>
 			</div>

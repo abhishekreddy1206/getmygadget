@@ -32,14 +32,6 @@ gadgetapp.factory('UserService', function ($http) {
     }
 })
 
-gadgetapp.factory('UserIdService', function ($http) {
-    return {
-        getUser: function (callback) {
-            $http.get('/getuser/').success(callback);
-        }
-    }
-})
-
 gadgetapp.factory('GetLatestOrder', function ($http) {
     return {
         getOrder: function (callback) {
@@ -205,22 +197,18 @@ gadgetapp.controller('CheckoutCtrl', function ($scope, $state, $stateParams, $ht
             if (data != null) {
                 $scope.order = data[0];
                 $scope.order_items = $scope.order.orders;
-                $scope.customer = $scope.order.customer;
-                if ($scope.order.order_type == "PI")
-                    $scope.order_type = "Pickup";
-                else
-                    $scope.order_type = "Parcel";
+                $scope.customer = $scope.order.user;
 
-                if ($scope.order.order_status == 'R') {
+                if ($scope.order.status == 'R') {
                     $scope.progress_type = 'Received';
                 }
-                else if ($scope.order.order_status == 'P' || $scope.order.order_status == 'A') {
+                else if ($scope.order.status == 'A') {
                     $scope.progress_type = 'Accepted';
                 }
-                else if ($scope.order.order_status == 'D') {
-                    $scope.progress_type = 'Delivered';
+                else if ($scope.order.status == 'D') {
+                    $scope.progress_type = 'Dispatched';
                 }
-                else if ($scope.order.order_status == 'RE') {
+                else if ($scope.order.status == 'RE') {
                     $scope.progress_type = 'Rejected';
                 }
             }
@@ -234,7 +222,7 @@ gadgetapp.controller('CheckoutCtrl', function ($scope, $state, $stateParams, $ht
         else if ($scope.progress_type == 'Accepted') {
             return 66;
         }
-        else if ($scope.progress_type == 'Delivered') {
+        else if ($scope.progress_type == 'Dispatched') {
             return 100;
         }
     };
@@ -251,11 +239,11 @@ gadgetapp.controller('CheckoutCtrl', function ($scope, $state, $stateParams, $ht
     setInterval($scope.GetData, 10000);
 });
 
-gadgetapp.controller('RestaurantCtrl', function ($scope, $modal, $state, $stateParams, $http, RestaurantService) {
+gadgetapp.controller('ApproverCtrl', function ($scope, $modal, $state, $stateParams, $http, UserService) {
 
     $scope.currentPageReceived = 1;
     $scope.currentPagePending = 1;
-    $scope.currentPageDelivered = 1;
+    $scope.currentPageDispatched = 1;
     $scope.currentPageRejected = 1;
     $scope.numPerPage = 5;
 
@@ -266,20 +254,20 @@ gadgetapp.controller('RestaurantCtrl', function ($scope, $modal, $state, $stateP
                 $scope.order_items = data;
 
                 $scope.received = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'R');
+                    return (item.status == 'R');
                 }));
                 $scope.pending = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'P' || item.order_status == 'A');
+                    return (item.status == 'P' || item.status == 'A');
                 }));
-                $scope.delivered = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'D');
+                $scope.dispatched = ($scope.order_items.filter(function (item) {
+                    return (item.status == 'D');
                 }));
                 $scope.rejected = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'RE');
+                    return (item.status == 'RE');
                 }));
                 $scope.totalReceived = $scope.received.length;
                 $scope.totalPending = $scope.pending.length;
-                $scope.totalDelivered = $scope.delivered.length;
+                $scope.totalDispatched = $scope.dispatched.length;
                 $scope.totalRejected = $scope.rejected.length;
             }
         });
@@ -304,11 +292,11 @@ gadgetapp.controller('RestaurantCtrl', function ($scope, $modal, $state, $stateP
         return (begin <= index && index < end);
     };
 
-    $scope.paginatedelivered = function (value) {
+    $scope.paginatedispatched = function (value) {
         var begin, end, index;
-        begin = ($scope.currentPageDelivered - 1) * $scope.numPerPage;
+        begin = ($scope.currentPageDispatched - 1) * $scope.numPerPage;
         end = begin + $scope.numPerPage;
-        index = $scope.delivered.indexOf(value);
+        index = $scope.dispatched.indexOf(value);
         return (begin <= index && index < end);
     };
 
@@ -334,7 +322,7 @@ gadgetapp.controller('RestaurantCtrl', function ($scope, $modal, $state, $stateP
             $scope.changeorderstatus($data.id, 'R');
         else if (array == $scope.pending)
             $scope.changeorderstatus($data.id, 'P');
-        else if (array == $scope.delivered)
+        else if (array == $scope.dispatched)
             $scope.changeorderstatus($data.id, 'D');
         else if (array == $scope.rejected)
             $scope.changeorderstatus($data.id, 'RE');
@@ -406,11 +394,11 @@ var OrderInstanceCtrl = function ($scope, $http, $log, $modalInstance, order_id,
     };
 };
 
-gadgetapp.controller('UserCtrl', function ($scope, $rootScope, $state, $stateParams, $http, UserService, UserDashboardService) {
+gadgetapp.controller('UserCtrl', function ($scope, $rootScope, $state, $stateParams, $http, UserService) {
 
     $scope.received = 0;
     $scope.pending = 0;
-    $scope.delivered = 0;
+    $scope.dispatched = 0;
     $scope.rejected = 0;
 
     $scope.GetData = function () {
@@ -419,38 +407,32 @@ gadgetapp.controller('UserCtrl', function ($scope, $rootScope, $state, $statePar
                 $scope.order_items = data;
 
                 $scope.received = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'R');
+                    return (item.status == 'R');
                 }));
                 $scope.pending = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'P' || item.order_status == 'A');
+                    return (item.status == 'A');
                 }));
-                $scope.delivered = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'D');
+                $scope.dispatched = ($scope.order_items.filter(function (item) {
+                    return (item.status == 'D');
                 }));
                 $scope.rejected = ($scope.order_items.filter(function (item) {
-                    return (item.order_status == 'RE');
+                    return (item.status == 'RE');
                 }));
-            }
-        });
-
-        UserDashboardService.getOrder(function (data) {
-            if (data != null) {
-                $scope.order = data;
             }
         });
     }
 
     $scope.getPercentage = function (item) {
-        if (item.order_status == 'R') {
+        if (item.status == 'R') {
             $scope.progress_type = 'Received';
             return 33;
         }
-        else if (item.order_status == 'P' || item.order_status == 'A') {
+        else if (item.status == 'P' || item.status == 'A') {
             $scope.progress_type = 'Accepted';
             return 66;
         }
-        else if (item.order_status == 'D') {
-            $scope.progress_type = 'Delivered';
+        else if (item.status == 'D') {
+            $scope.progress_type = 'Dispatched';
             return 100;
         }
     };

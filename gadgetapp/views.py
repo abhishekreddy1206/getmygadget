@@ -154,3 +154,10 @@ def PostNotes(request):
         order_save.save()
 
     return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
+
+@login_required
+def Dashboard(request):
+    if is_requester(request.user):
+        return render_to_response("gadgetapp/requesterdashboard.html", { 'user': request.user })
+    else:
+        return render_to_response("gadgetapp/approverdashboard.html", { 'user': request.user })

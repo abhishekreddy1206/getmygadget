@@ -83,7 +83,7 @@ class Order(models.Model):
 
 
 class OrderDetail(models.Model):
-    order = models.ForeignKey(Order)
+    order = models.ForeignKey(Order, related_name='orders')
     inventory = models.ForeignKey(Inventory)
     quantity = models.IntegerField(default=1)
 

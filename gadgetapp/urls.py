@@ -13,4 +13,7 @@ urlpatterns = patterns('',
                        url(r'^inventoryapi/', api.InventoryList.as_view(), name='inventorylist'),
                        url(r'^postorder/', views.PostOrder, name='postorder'),
                        url(r'^postnotes/', views.PostNotes, name='postnotes'),
+                       url(r'^getlatestorderuser/', api.GetLatestOrderUser.as_view(), name='getlatestorderuser'),
+                       url(r'^dashboard/$', views.Dashboard, name='dashboard'),
+                       url(r'^userapi/', api.UserOrderList.as_view(), name='userlist'),
                        )

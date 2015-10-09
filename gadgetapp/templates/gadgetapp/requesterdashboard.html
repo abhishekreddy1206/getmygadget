@@ -1,0 +1,170 @@
+{% extends 'gadgetapp/index.html' %}
+{% block bodycontent %}
+
+	<div class="container" ng-controller="UserCtrl">
+		<div class="heading">
+			<legend class=""><h2>Welcome, {{ user.username|title }}</h2></legend>
+		</div>
+
+		{% verbatim %}
+
+		<div class="row">
+		    
+		    <ul class="nav nav-pills nav-stacked col-md-2">
+			    <li class="active"><a href="#overall" data-toggle="tab">Overall Dashboard</a></li>
+			    <li><a href="#completed" data-toggle="tab">Completed Orders</a></li>
+			    <li><a href="#rejected" data-toggle="tab">Rejected Orders</a></li>
+			</ul>
+
+		    <div class="tab-content">
+
+			    <div class="tab-pane fade in active col-md-10" id="overall">
+
+		            <div class="row">
+			            <div class="panel" ng-repeat="x in received">
+			            	<div class="panel-heading">
+								<h6 class="text-center">Order Status</h6>
+								<progressbar class="progress-striped active" max="100" 
+					                  		value="getPercentage(x)" 
+					                  		type="{{ getProgressType(x) }}">
+					                  		{{ progress_type }}
+					            </progressbar>
+					        </div>
+
+					        <div class="panel-body">
+								<div class="well col-md-3">
+									<h6 class="text-center">user Information:</h6>
+									<b>Name:</b> {{ x.user.user.first_name }}, {{ x.user.user.last_name }}
+									<br/><b>Email:</b> {{ x.user.user.email }}
+									<br/><b>Address:</b> {{ x.user.address1 }}, {{ x.user.address2 }}, {{ x.user.city }}, {{ x.user.state }} - {{ x.user.zipcode }}
+									<br/><b>Phone:</b> {{ x.user.phone }}
+									<br/><b>Order Number:</b> {{ x.id }}
+									<br/><b>Notes:</b> {{ x.notes }}
+								</div>
+
+								<div class="well col-md-9">
+									<h6 class="text-center">Order Information:</h6>
+									<div class="table-responsive">
+									    <table class="table">
+									    	<tr>
+									    		<th>Item</th>
+									    		<th>Price</th>
+									    		<th>Quantity</th>
+									    		<th>Sub-Total</th>
+									    	</tr>
+									    	<tr ng-repeat="item in x.orders">
+									    		<td ng-bind="item.inventory.name"></td>
+									    		<td ng-bind="item.inventory.price | currency "></td>
+									    		<td ng-bind="item.quantity"></td>
+									    		<td ng-bind="item.inventory.price * item.quantity | currency "></td>
+									    	</tr>
+									    	<tr>
+									    		<th>Total</th>
+									    		<th></th>
+									    		<th></th>
+									    		<th ng-bind="x.total_price | currency "></th>
+									    </table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel" ng-repeat="x in accepted">
+			            	<div class="panel-heading">
+								<h6 class="text-center">Order Status</h6>
+								<progressbar class="progress-striped active" max="100" 
+					                  		value="getPercentage(x)" 
+					                  		type="{{ getProgressType(x) }}">
+					                  		{{ progress_type }}
+					            </progressbar>
+					        </div>
+
+					        <div class="panel-body">
+								<div class="well col-md-3">
+									<h6 class="text-center">DT User Information:</h6>
+									<b>Name:</b> {{ x.user.user.first_name }}, {{ x.user.user.last_name }}
+									<br/><b>Email:</b> {{ x.user.user.email }}
+									<br/><b>Address:</b> {{ x.user.address1 }}, {{ x.user.address2 }}, {{ x.user.city }}, {{ x.user.state }} - {{ x.user.zipcode }}
+									<br/><b>Phone:</b> {{ x.user.phone }}
+									<br/><b>Order Number:</b> {{ x.id }}
+									<br/><b>Notes:</b> {{ x.user_notes }}
+								</div>
+
+								<div class="well col-md-9">
+									<h6 class="text-center">Order Information:</h6>
+									<div class="table-responsive">
+									    <table class="table">
+									    	<tr>
+									    		<th>Item</th>
+									    		<th>Price</th>
+									    		<th>Quantity</th>
+									    		<th>Sub-Total</th>
+									    	</tr>
+									    	<tr ng-repeat="item in x.orders">
+									    		<td ng-bind="item.inventory.name"></td>
+									    		<td ng-bind="item.inventory.price | currency "></td>
+									    		<td ng-bind="item.quantity"></td>
+									    		<td ng-bind="item.inventory.price * item.quantity | currency "></td>
+									    	</tr>
+									    	<tr>
+									    		<th>Total</th>
+									    		<th></th>
+									    		<th></th>
+									    		<th ng-bind="x.total_price | currency "></th>
+									    </table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+			 	</div>
+
+			 	<div class="tab-pane fade col-md-10" id="completed">
+			 		<h2>Completed Orders</h2>
+			 		<div class="table-responsive">
+	                    <table class="table">
+	                        <tr>
+	                            <th>Order Number</th>
+	                            <th>user Name</th>
+	                            <th>Order Date</th>
+	                            <th>Order Total</th>
+	                        </tr>
+	                        <tr ng-repeat="order in order_items" ng-if="order.order_status == 'D'">
+	                            <td ng-bind="order.id"></td>
+	                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
+	                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
+	                            <td ng-bind="order.total_price | currency "></td>
+	                        </tr>
+	                    </table>
+	                </div>
+			 	</div>
+
+			 	<div class="tab-pane fade col-md-10" id="rejected">
+			 		<h2>Rejected Orders</h2>
+			 		<div class="table-responsive">
+	                    <table class="table">
+	                        <tr>
+	                            <th>Order Number</th>
+	                            <th>user Name</th>
+	                            <th>Order Date</th>
+	                            <th>Order Total</th>
+	                            <th>Reason</th>
+	                        </tr>
+	                        <tr ng-repeat="order in order_items" ng-if="order.order_status == 'RE'">
+	                            <td ng-bind="order.id"></td>
+	                            <td>{{ order.user.user.first_name }}, {{ order.user.user.last_name }}</td>
+	                            <td ng-bind="order.order_date | date:'yyyy-MM-dd'"></td>
+	                            <td ng-bind="order.total_price | currency "></td>
+	                            <td ng-bind="order.restaurant_notes"></td>
+	                        </tr>
+	                    </table>
+	                </div>
+			 	</div>
+			</div>
+		</div>
+
+		{% endverbatim %}
+
+	</div>
+
+{% endblock %}
