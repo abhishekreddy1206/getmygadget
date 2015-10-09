@@ -3,11 +3,11 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
-
-
+import json
+from datetime import datetime
 # Create your views here.
 from forms import UserForm, UserCreateForm
-from models import DTUser, Inventory
+from models import DTUser, Inventory, Order, OrderDetail
 
 
 def is_requester(user):
@@ -141,3 +141,16 @@ def PostOrder(request):
         # msg.send()
 
     return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})
+
+def PostNotes(request):
+
+    if request.method == 'POST':
+        data = request.body
+        order_data = json.loads(data)
+        notes = order_data['notes']
+
+        order_save = Order.objects.filter(user__user = request.user).order_by('-id')[0]
+        order_save.user_notes = notes
+        order_save.save()
+
+    return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })

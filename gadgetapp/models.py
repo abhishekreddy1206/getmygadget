@@ -65,11 +65,13 @@ class Order(models.Model):
         ('RE', 'Rejected'),
         ('D', 'Dispatched')
     )
-    user = models.ForeignKey(User, related_name='requester')
-    approver = models.ForeignKey(User, related_name='approver', blank=True)
+    user = models.ForeignKey(DTUser, related_name='requester')
+    approver = models.ForeignKey(DTUser, related_name='approver', null=True)
     order_date = models.DateTimeField(auto_now_add=True)
     update_timestamp = models.DateTimeField(auto_now_add=False)
     status = models.CharField(choices=STATUS_CHOICES, default='R', max_length=50)
+    notes = models.CharField(blank=True, max_length=500)
+    approver_notes = models.CharField(blank=True, max_length=500)
     total_price = models.FloatField(blank = True)
 
     class Meta:

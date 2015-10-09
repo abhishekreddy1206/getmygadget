@@ -12,4 +12,5 @@ urlpatterns = patterns('',
                        url(r'^confirmorder/$', views.ConfirmOrder, name='corfirmorder'),
                        url(r'^inventoryapi/', api.InventoryList.as_view(), name='inventorylist'),
                        url(r'^postorder/', views.PostOrder, name='postorder'),
+                       url(r'^postnotes/', views.PostNotes, name='postnotes'),
                        )

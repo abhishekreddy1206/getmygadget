@@ -1,0 +1,77 @@
+<div id="page-content" ng-controller="CheckoutCtrl">
+
+	<div class="container">
+		{% verbatim %}
+		<legend class="text-center"><h3>Thank you for Ordering</h3></legend>
+
+		<p class="text-center">You can keep track of your order in your <a href="/dashboard"><strong>dashboard</strong></a> too!</p>
+
+		<legend class="text-center"><h3>Here is your Order Information</h3></legend>
+		<div class="row">
+
+			<h6 class="text-center">Order Status</h6>
+			<div ng-if="progress_type == 'Rejected'">
+				<progressbar class="progress-striped active" max="100" 
+	                  		value="100" 
+	                  		type="danger">
+	                  		Rejected
+	            </progressbar>
+
+	            <div class="alert alert-danger text-center" role="alert">
+	            	<p>OOPS! Your order was rejected by the Restaurant</p>
+	            	<br/><p><b>Reason:</b> {{ order.restaurant_notes }}</p>
+	            </div>
+	        </div>
+	        <div ng-if="progress_type != 'Rejected'">
+				<progressbar class="progress-striped active" max="100" 
+	                  		value="getPercentage()" 
+	                  		type="{{ getProgressType() }}">
+	                  		{{ progress_type }}
+	            </progressbar>
+
+	            <div ng-if="progress_type == 'Delivered'" class="alert alert-success text-center" role="alert">
+	            	<p>HURRAY! Your order is complete.</p>
+	            </div>
+	        </div>
+
+
+			<div class="well col-md-3">
+				<h6 class="text-center">Customer Information</h6>
+				<b>Name:</b> {{ customer.user.first_name }}, {{ customer.user.last_name }}
+				<br/><b>Email:</b> {{ customer.user.email }}
+				<br/><b>Address:</b> {{ customer.address1 }}, {{ customer.address2 }}, {{ customer.city }}, {{ customer.state }} - {{ customer.zipcode }}
+				<br/><b>Phone:</b> {{ customer.phone }}
+				<br/><b>Order Number:</b> {{ order.id }}
+				<br/><b>Notes:</b> {{ order.user_notes }}
+				<br/><b>Order Type:</b> {{ order_type }}
+			</div>
+
+			<div class="well col-md-9">
+				<h6 class="text-center">Order Information</h6>
+				<div class="table-responsive">
+				    <table class="table">
+				    	<tr>
+				    		<th>Item</th>
+				    		<th>Price</th>
+				    		<th>Quantity</th>
+				    		<th>Sub-Total</th>
+				    	</tr>
+				    	<tr ng-repeat="item in order_items">
+				    		<td ng-bind="item.menu.name"></td>
+				    		<td ng-bind="item.menu.price | currency:'&#x20B9;'"></td>
+				    		<td ng-bind="item.quantity"></td>
+				    		<td ng-bind="item.menu.price * item.quantity | currency:'&#x20B9;'"></td>
+				    	</tr>
+				    	<tr>
+				    		<th>Total</th>
+				    		<th></th>
+				    		<th></th>
+				    		<th ng-bind="order.total_price | currency:'&#x20B9;'"></th>
+				    </table>
+				</div>
+			</div>
+		</div>
+		{% endverbatim %}
+	</div>
+
+</div>
