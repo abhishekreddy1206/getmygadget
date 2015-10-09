@@ -138,7 +138,7 @@ def PostNotes(request):
         notes = order_data['notes']
 
         order_save = Order.objects.filter(user__user=request.user).order_by('-id')[0]
-        order_save.user_notes = notes
+        order_save.notes = notes
         order_save.save()
 
     return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})
