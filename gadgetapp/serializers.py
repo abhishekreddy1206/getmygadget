@@ -1,18 +1,19 @@
 from rest_framework import serializers
+
 from models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
-class InventorySerializer(serializers.ModelSerializer):
 
+class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
         fields = ('id', 'name', 'parent', 'level', 'price', 'description', 'picture')
+
 
 class DTUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -20,11 +21,13 @@ class DTUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = DTUser
 
+
 class OrderDetailSerializer(serializers.ModelSerializer):
     inventory = InventorySerializer()
 
     class Meta:
         model = OrderDetail
+
 
 class OrderSerializer(serializers.ModelSerializer):
     orders = OrderDetailSerializer(many=True, read_only=True)
