@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 
+
 # Create your views here.
 from forms import UserForm, UserCreateForm
 from models import DTUser, Inventory, Order, OrderDetail
@@ -140,31 +141,32 @@ def PostNotes(request):
         order_save.user_notes = notes
         order_save.save()
 
-    return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
+    return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})
+
 
 def PostComments(request):
-
     if request.method == 'POST':
         data = request.body
         order_data = json.loads(data)
         comments = order_data['comments']
         order_id = order_data['order_id']
 
-        order_save = Order.objects.get(id = order_id)
+        order_save = Order.objects.get(id=order_id)
         order_save.approver_notes = comments
         order_save.save()
 
     return HttpResponseRedirect('/dashboard')
 
+
 @login_required
 def Dashboard(request):
     if is_requester(request.user):
-        return render_to_response("gadgetapp/requesterdashboard.html", { 'user': request.user })
+        return render_to_response("gadgetapp/requesterdashboard.html", {'user': request.user})
     else:
-        return render_to_response("gadgetapp/approverdashboard.html", { 'user': request.user })
+        return render_to_response("gadgetapp/approverdashboard.html", {'user': request.user})
+
 
 def ChangeOrderStatus(request, pk, status):
-
     order = Order.objects.get(id=pk)
     order.status = status
     order.update_timestamp = datetime.now()
