@@ -1,142 +1,143 @@
 from django.shortcuts import render, render_to_response
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
-from django.contrib import messages
-from datetime import datetime
 
-import json
-
-from models import *
-from forms import *
 
 # Create your views here.
-def is_requester(user):
+from forms import UserForm, UserCreateForm
+from models import DTUser, Inventory
 
-	if DTUser.objects.filter(user = user, user_type = 'R'):
-		return True
-	else:
-		return False
+
+def is_requester(user):
+    if DTUser.objects.filter(user=user, user_type='R'):
+        return True
+    else:
+        return False
+
 
 def user_login(request):
+    next = request.POST.get('next', '')
 
-	next = request.POST.get('next', '')
+    if request.method == 'POST':
 
-	if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
 
-		username = request.POST['username']
-		password = request.POST['password']
+        user = authenticate(username=username, password=password)
 
-		user = authenticate(username=username, password=password)
+        if user:
+            if user is not None and user.is_active:
+                login(request, user)
+                if next == "":
+                    return HttpResponseRedirect('/')
+                else:
+                    return HttpResponseRedirect(next)
+            else:
+                return HttpResponse("Your GetMyGadGet account is disabled.")
+        else:
+            print "Invalid login details: {0}, {1}".format(username, password)
+            return HttpResponse("Invalid login details supplied.")
+    else:
+        return render(request, 'gadgetapp/login.html', {})
 
-		if user:
-			if user is not None and user.is_active:
-				login(request, user)
-				if next == "":
-					return HttpResponseRedirect('/')
-				else:
-					return HttpResponseRedirect(next)
-			else:
-				return HttpResponse("Your GetMyGadGet account is disabled.")
-		else:
-			print "Invalid login details: {0}, {1}".format(username, password)
-			return HttpResponse("Invalid login details supplied.")
-	else:
-		return render(request, 'gadgetapp/login.html', {})
 
 @login_required
 def user_logout(request):
-	logout(request)
-	return HttpResponseRedirect('/login')
+    logout(request)
+    return HttpResponseRedirect('/login')
+
 
 def Register(request):
-	registered = False
+    registered = False
 
-	if request.method == 'POST':
-		user_form = UserForm(data=request.POST)
-		c_form = UserCreateForm(data=request.POST)
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        c_form = UserCreateForm(data=request.POST)
 
-		if user_form.is_valid() and c_form.is_valid():
-			user = user_form.save()
-			user.set_password(user.password)
-			user.save()
+        if user_form.is_valid() and c_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
 
-			c = c_form.save(commit=False)
-			c.user = user
-			c.save()
+            c = c_form.save(commit=False)
+            c.user = user
+            c.save()
 
-			c_form.save_m2m()
-			registered = True
+            c_form.save_m2m()
+            registered = True
 
-		else:
-			print user_form.errors, c_form.errors
+        else:
+            print user_form.errors, c_form.errors
 
-	else:
+    else:
 
-		user_form = UserForm()
-		c_form = UserCreateForm()
+        user_form = UserForm()
+        c_form = UserCreateForm()
 
-	return render(request, 'gadgetapp/register.html', {'user_form': user_form, 'c_form': c_form, 'registered': registered}, RequestContext(request))
+    return render(request, 'gadgetapp/register.html',
+                  {'user_form': user_form, 'c_form': c_form, 'registered': registered}, RequestContext(request))
 
-
-@login_required
-def user_logout(request):
-	logout(request)
-	return HttpResponseRedirect('/login')
 
 def DefaultView(request):
-	return render_to_response('gadgetapp/home.html', {'user': request.user})
+    return render_to_response('gadgetapp/home.html', {'user': request.user})
+
 
 @login_required
 def ShowMenu(request):
-	if is_requester(request.user):
-		usertype = 'user'
-	else:
-		usertype = 'approver'
+    if is_requester(request.user):
+        usertype = 'user'
+    else:
+        usertype = 'restaurant'
 
-	menu_parent = Inventory.objects.all()
-	return render_to_response("gadgetapp/menu.html", { 'user': request.user, 'restaurant': menu_parent, 'usertype': usertype }, context_instance=RequestContext(request))
+    menu_parent = Inventory.objects.all()
+    return render_to_response("gadgetapp/menu.html",
+                              {'user': request.user, 'restaurant': menu_parent, 'usertype': usertype},
+                              context_instance=RequestContext(request))
+
 
 def OrderView(request):
-	return render_to_response("gadgetapp/order.html", { 'user': request.user })
+    return render_to_response("gadgetapp/order.html", {'user': request.user})
+
 
 def Checkout(request):
-	return render_to_response("gadgetapp/checkout.html", { 'user': request.user })
+    return render_to_response("gadgetapp/checkout.html", {'user': request.user})
+
 
 def ConfirmOrder(request):
-	return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
+    return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
 
 def PostOrder(request):
 
-	if request.method == 'POST':
-		data = request.body
-		order_data = json.loads(data)
-		total = sum(c['price']*c['quantity'] for c in order_data)
+    if request.method == 'POST':
+        data = request.body
+        order_data = json.loads(data)
+        total = sum(c['price']*c['quantity'] for c in order_data)
 
-		dtuser = DTUser.objects.get(user = request.user)
-		order_save = Order(user = dtuser, total_price = total, update_timestamp = datetime.now())
-		order_save.save()
-		
-		for i in range(0,len(order_data)):
-			x = order_data[i]
-			inv = Inventory.objects.get(name = x['name'], parent = x['parent'], level=x['level'])
-			order_detail_save = OrderDetail(order = order_save, inventory = inv, quantity = x['quantity'])
-			order_detail_save.save()
+        dtuser = DTUser.objects.get(user = request.user)
+        order_save = Order(user = dtuser, total_price = total, update_timestamp = datetime.now())
+        order_save.save()
 
-		# subject = "CloudMellow: Thank you for you Order"
+        for i in range(0,len(order_data)):
+            x = order_data[i]
+            inv = Inventory.objects.get(name = x['name'], parent = x['parent'], level=x['level'])
+            order_detail_save = OrderDetail(order = order_save, inventory = inv, quantity = x['quantity'])
+            order_detail_save.save()
 
-		# plaintext = get_template('bhojanamapp/emailreceived.txt')
-		# htmly = get_template('bhojanamapp/emailreceived.html')
-		# d = Context({ 'username': request.user.username, 'order_data': order_data, 'total': total })
+        # subject = "CloudMellow: Thank you for you Order"
 
-		# text_content = plaintext.render(d)
-		# html_content = htmly.render(d)
+        # plaintext = get_template('bhojanamapp/emailreceived.txt')
+        # htmly = get_template('bhojanamapp/emailreceived.html')
+        # d = Context({ 'username': request.user.username, 'order_data': order_data, 'total': total })
 
-		# from_email = settings.EMAIL_HOST_USER
-		# to_list = [request.user.email]
-		# msg = EmailMultiAlternatives(subject, text_content, from_email, to_list)
-		# msg.attach_alternative(html_content, "text/html")
-		# msg.send()
+        # text_content = plaintext.render(d)
+        # html_content = htmly.render(d)
 
-	return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
+        # from_email = settings.EMAIL_HOST_USER
+        # to_list = [request.user.email]
+        # msg = EmailMultiAlternatives(subject, text_content, from_email, to_list)
+        # msg.attach_alternative(html_content, "text/html")
+        # msg.send()
+
+    return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})

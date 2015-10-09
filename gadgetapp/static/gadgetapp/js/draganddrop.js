@@ -5,7 +5,7 @@
  * Time: 11:27
  * To change this template use File | Settings | File Templates.
  */
-angular.module("ngDragDrop",[])
+angular.module("ngDragDrop", [])
     .directive("uiDraggable", [
         '$parse',
         '$rootScope',
@@ -33,7 +33,7 @@ angular.module("ngDragDrop",[])
                 //For IE
                 //element.bind("selectstart",function() {
                 //    this.dragDrop();
-                 //   return false;
+                //   return false;
                 //}, false);
 
                 element.bind("dragend", function (e) {
@@ -103,7 +103,6 @@ angular.module("ngDragDrop",[])
                     }
 
                 });
-
 
 
                 $rootScope.$on("ANGULAR_DRAG_END", function (e, channel) {
