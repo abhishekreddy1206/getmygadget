@@ -1,7 +1,1 @@
-*.pyc
-*.py~
-*.js~
 *_initial.py
-*_auto_*.py
-00*.py
-email_info.py

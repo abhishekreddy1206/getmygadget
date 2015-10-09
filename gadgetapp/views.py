@@ -1,10 +1,12 @@
+import json
+from datetime import datetime
+
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
-import json
-from datetime import datetime
+
 # Create your views here.
 from forms import UserForm, UserCreateForm
 from models import DTUser, Inventory, Order, OrderDetail
@@ -106,51 +108,51 @@ def Checkout(request):
 
 
 def ConfirmOrder(request):
-    return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
+    return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})
+
 
 def PostOrder(request):
-
     if request.method == 'POST':
         data = request.body
         order_data = json.loads(data)
-        total = sum(c['price']*c['quantity'] for c in order_data)
+        total = sum(c['price'] * c['quantity'] for c in order_data)
 
-        dtuser = DTUser.objects.get(user = request.user)
-        order_save = Order(user = dtuser, total_price = total, update_timestamp = datetime.now())
+        dtuser = DTUser.objects.get(user=request.user)
+        order_save = Order(user=dtuser, total_price=total, update_timestamp=datetime.now())
         order_save.save()
 
-        for i in range(0,len(order_data)):
+        for i in range(0, len(order_data)):
             x = order_data[i]
-            inv = Inventory.objects.get(name = x['name'], parent = x['parent'], level=x['level'])
-            order_detail_save = OrderDetail(order = order_save, inventory = inv, quantity = x['quantity'])
+            inv = Inventory.objects.get(name=x['name'], parent=x['parent'], level=x['level'])
+            order_detail_save = OrderDetail(order=order_save, inventory=inv, quantity=x['quantity'])
             order_detail_save.save()
 
-        # subject = "CloudMellow: Thank you for you Order"
+            # subject = "CloudMellow: Thank you for you Order"
 
-        # plaintext = get_template('bhojanamapp/emailreceived.txt')
-        # htmly = get_template('bhojanamapp/emailreceived.html')
-        # d = Context({ 'username': request.user.username, 'order_data': order_data, 'total': total })
+            # plaintext = get_template('bhojanamapp/emailreceived.txt')
+            # htmly = get_template('bhojanamapp/emailreceived.html')
+            # d = Context({ 'username': request.user.username, 'order_data': order_data, 'total': total })
 
-        # text_content = plaintext.render(d)
-        # html_content = htmly.render(d)
+            # text_content = plaintext.render(d)
+            # html_content = htmly.render(d)
 
-        # from_email = settings.EMAIL_HOST_USER
-        # to_list = [request.user.email]
-        # msg = EmailMultiAlternatives(subject, text_content, from_email, to_list)
-        # msg.attach_alternative(html_content, "text/html")
-        # msg.send()
+            # from_email = settings.EMAIL_HOST_USER
+            # to_list = [request.user.email]
+            # msg = EmailMultiAlternatives(subject, text_content, from_email, to_list)
+            # msg.attach_alternative(html_content, "text/html")
+            # msg.send()
 
     return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})
 
-def PostNotes(request):
 
+def PostNotes(request):
     if request.method == 'POST':
         data = request.body
         order_data = json.loads(data)
         notes = order_data['notes']
 
-        order_save = Order.objects.filter(user__user = request.user).order_by('-id')[0]
+        order_save = Order.objects.filter(user__user=request.user).order_by('-id')[0]
         order_save.user_notes = notes
         order_save.save()
 
-    return render_to_response("gadgetapp/confirmorder.html", { 'user': request.user })
+    return render_to_response("gadgetapp/confirmorder.html", {'user': request.user})
